@@ -2,6 +2,9 @@ const express = require('express')
 const router = new express.Router
 const auth = require('../middleware/auth')
 const Task = require('../models/task')
+const multer = require('multer')
+const sharp = require('sharp')
+
 
 router.post('/tasks', auth, async (req, res)=>{
     const task = new Task({
@@ -88,6 +91,45 @@ router.delete('/tasks/:id', auth, async (req, res)=>{
     }catch(e){
         res.status(500).send()
     }
+})
+
+const upload = multer({
+    limits:{
+        fileSize:1e6
+    },
+    fileFilter(req,file,cb){
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('The file must be jpg,jpeg or png'))
+        }
+        cb(undefined,true)
+    }
+})
+
+router.post('/tasks/:id/taskPicture', auth, upload.single('taskPicture'), async (req,res)=>{
+    const task = await Task.findById(req.params.id)
+    if (!task){
+        return res.status(404).send()
+    }
+    const buffer = await sharp(req.file.buffer).resize({width: 250, height:250}).png().toBuffer()
+    task.taskPicture = buffer
+    await task.save()
+    res.send()
+}, (error,req,res,next)=>{
+    res.status(400).send({error: error.message})
+})
+
+router.get('/tasks/:id/taskPicture', auth, async (req,res)=>{
+    try{
+        const task = await Task.findById(req.params.id)
+        if (!task){
+            return res.status(404).send()
+        }
+        res.set('Content-Type', 'image/png')
+        res.send(task.taskPicture)
+    }catch(e){
+        res.status(500).send(e)
+    }
+    
 })
 
 module.exports = router
