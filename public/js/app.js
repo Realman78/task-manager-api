@@ -18,5 +18,13 @@ regForm.addEventListener('submit', (e)=>{
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: data
+    }).then((res)=>{
+        console.log(res)
+        return res.json()
+    }).then((data)=>{
+        console.log(data)
+        location.href = 'main.html?token=' + data.token
+    }).catch((e)=>{
+        console.log(e)
     })
 })
