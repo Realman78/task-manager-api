@@ -4,7 +4,6 @@ let user = undefined
 const taskList = document.querySelector('ul')
 
 let taskDescriptions = []
-//const logoutAllButton = document.querySelector('#logoutAllButton')
 const addTaskButton = document.querySelector('#addTaskButton')
 const logoutButton = document.querySelector('#logoutButton')
 
@@ -86,21 +85,34 @@ function getUserTasks(){
     })
 }
 
-// logoutAllButton.addEventListener('click', (e)=>{
-//     e.preventDefault()
-//     if(confirm('Are you sure')){
-//         fetch('/users/logoutAll', {
-//             method: 'post',
-//             headers:{
-//                 'Content-Type': 'application/json',
-//                 'Authorization': token
-//             }
-//         }).then((res)=>{
-//             document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'
-//             location.href = '/login.html'
-//         })
-//     }
-// })
+addTaskButton.addEventListener('click', (e)=>{
+    e.preventDefault()
+    const task = prompt('Enter the name of the task please')
+    if (!task){
+        return undefined
+    }
+    const bodyData = JSON.stringify({
+        description: task
+    })
+    fetch('/tasks', {
+        method: 'post',
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        body: bodyData
+    }).then((res)=>{
+        res.json().then((data)=>{
+            const li = document.createElement('li')
+            li.innerHTML = data.description
+            taskList.appendChild(li)
+            
+            //location.reload()
+        })
+    })
+    
+    
+})
 
 logoutButton.addEventListener('click', (e)=>{
     e.preventDefault()
