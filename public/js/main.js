@@ -2,10 +2,22 @@ const userInfo = document.querySelector('h1')
 const avatarUser = document.querySelector('img')
 let user = undefined
 const taskList = document.querySelector('ul')
-const urlParams = new URLSearchParams(window.location.search)
-const token = urlParams.get('token')
+
 let taskDescriptions = []
+//const logoutAllButton = document.querySelector('#logoutAllButton')
+const addTaskButton = document.querySelector('#addTaskButton')
 const logoutButton = document.querySelector('#logoutButton')
+
+const cookies = document.cookie
+const token = cookies.substring(cookies.indexOf('token')+6)
+
+
+
+window.onload = function(){
+    if (token.length < 50){
+        location.href = '/login.html'
+    }
+}
 
 
 
@@ -17,6 +29,7 @@ function getUserAvatar(userID){
         }
     }).then(response => response.blob())
         .then(images => {
+            console.log(images)
         
         if (!URL.createObjectURL(images)){
             avatarUser.remove()
@@ -43,9 +56,10 @@ function getUserInfo(){
     }).then((data)=>{
         user = data
         userInfo.innerHTML = user.name
-        console.log(user)
         if(user.avatar){
             getUserAvatar(user._id)
+        }else{
+            avatarUser.remove()
         }
     })
     .catch((e)=>{
@@ -68,21 +82,37 @@ function getUserTasks(){
                 li.innerHTML = task.description
                 taskList.appendChild(li)
             })
-            console.log(taskDescriptions)
         })
     })
 }
 
+// logoutAllButton.addEventListener('click', (e)=>{
+//     e.preventDefault()
+//     if(confirm('Are you sure')){
+//         fetch('/users/logoutAll', {
+//             method: 'post',
+//             headers:{
+//                 'Content-Type': 'application/json',
+//                 'Authorization': token
+//             }
+//         }).then((res)=>{
+//             document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'
+//             location.href = '/login.html'
+//         })
+//     }
+// })
+
 logoutButton.addEventListener('click', (e)=>{
     e.preventDefault()
-    if(confirm('Are you sure')){
-        fetch('/users/logoutAll', {
+    if (confirm('Are you sure you want to log out?')){
+        fetch('/users/logout',{
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': token
             }
         }).then((res)=>{
+            document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'
             location.href = '/login.html'
         })
     }

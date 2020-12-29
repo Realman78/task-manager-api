@@ -1,5 +1,12 @@
 const regForm = document.querySelector('#createUserForm')
 
+const cookies = document.cookie
+const token = cookies.substring(cookies.indexOf('token')+6)
+window.onload = function(){
+    if (token.length > 50){
+        location.href = '/main.html'
+    }
+}
 
 regForm.addEventListener('submit', (e)=>{
     e.preventDefault()
@@ -21,10 +28,10 @@ regForm.addEventListener('submit', (e)=>{
     }).then((res)=>{
         console.log(res)
         return res.json()
-    }).then((data)=>{
-        console.log(data)
-        location.href = 'main.html?token=' + data.token
-    }).catch((e)=>{
-        console.log(e)
+    }).then((data2)=>{
+        document.cookie = 'token=' + data2.token + ';expires=Thu, 18 Dec 2042 12:00:00 UTC;'
+        location.href = 'main.html'
+    }).catch((e2)=>{
+        console.log(e2)
     })
 })

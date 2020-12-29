@@ -22,6 +22,7 @@ app.get('/login', (req,res)=>{
 })
 
 app.get('/main', (req,res)=>{
+    console.log(req.query)
     res.render('main', {
         
     })
