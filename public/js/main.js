@@ -37,7 +37,6 @@ function getUserAvatar(userID){
         }).catch((e)=>{
             console.log(e)
         })
-    
 }
 
 

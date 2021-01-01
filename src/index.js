@@ -13,20 +13,20 @@ app.use(express.static(publicDirPath))
 app.use(userRouter)
 app.use(taskRouter)
 
-app.get('', (req,res)=>{
-    res.render('index', {})
-})
+// app.get('', (req,res)=>{
+//     res.render('index', {})
+// })
 
-app.get('/login', (req,res)=>{
-    res.render('login',{})
-})
+// app.get('/login', (req,res)=>{
+//     res.render('login',{})
+// })
 
-app.get('/main', (req,res)=>{
-    console.log(req.query)
-    res.render('main', {
+// app.get('/main', (req,res)=>{
+//     console.log(req.query)
+//     res.render('main', {
         
-    })
-})
+//     })
+// })
 
 app.listen(port, ()=>{
     console.log('Server is up on port ' + port)
