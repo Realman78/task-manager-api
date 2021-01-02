@@ -15,7 +15,7 @@ let lastEl = undefined
 
 window.onload = function(){
     if (token.length < 50){
-        location.href = '/login.html'
+        location.href = '/login'
     }
 }
 
@@ -207,7 +207,7 @@ logoutButton.addEventListener('click', (e)=>{
             }
         }).then((res)=>{
             document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'
-            location.href = '/login.html'
+            location.href = '/login'
         })
     }
 })

@@ -25,6 +25,10 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
+router.get('/users/me/avatar', auth, async(req,res)=>{
+    res.send(req.user.avatar)
+})
+
 const upload = multer({
     limits:{
         fileSize:1e6
@@ -38,11 +42,17 @@ const upload = multer({
 })
 
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res)=>{
-    const buffer = await sharp(req.file.buffer).resize({width: 250, height:250}).png().toBuffer()
-
-    req.user.avatar = buffer
-    await req.user.save()
-    res.send()
+    console.log(req)
+    try{
+        const buffer = await sharp(req.file.buffer).resize({width: 250, height:250}).png().toBuffer()
+    
+        req.user.avatar = buffer
+        await req.user.save()
+        res.send()
+    }catch(e){
+        console.log(e)
+    }
+    
 }, (error,req,res,next)=>{
     res.status(400).send({error: error.message})
 })

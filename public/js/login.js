@@ -4,7 +4,7 @@ const cookies = document.cookie
 const token = cookies.substring(cookies.indexOf('token')+6)
 window.onload = function(){
     if (token.length > 50){
-        location.href = '/main.html'
+        location.href = '/main'
     }
 }
 
@@ -29,7 +29,7 @@ loginForm.addEventListener('submit', (e)=>{
 
         document.cookie = 'token=' + data2.token + ';expires=Thu, 18 Dec 2042 12:00:00 UTC;'
         
-        location.href = 'main.html'
+        location.href = '/main'
     }).catch((e2)=>{
         console.log(e2)
     })
